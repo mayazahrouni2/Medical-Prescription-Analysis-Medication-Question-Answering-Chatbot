@@ -225,6 +225,7 @@ def create_vector_store_from_text(text):
     return vector_store
 
 
+# hadi mta3 el pdf :) 
 
 
 def build_medical_analysis_prompt(question, context):
