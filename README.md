@@ -1,16 +1,23 @@
 # Medical Prescription Analysis & Medication Question-Answering Chatbot
 
 ## Overview
-This project implements an end-to-end intelligent system for analyzing medical prescriptions provided as text or images and enabling safe, explainable, and patient-oriented question-answering about prescribed medications.
+This project presents an end-to-end intelligent system for analyzing medical prescriptions provided as **text or images**, and for delivering **safe, explainable, and patient-oriented question answering** about prescribed medications.
 
-The system is designed to handle noisy OCR outputs, handwritten prescriptions, and ambiguous medical notation by combining OCR, Large Language Models (LLMs), semantic similarity search, Retrieval-Augmented Generation (RAG), and Explainable AI (XAI) techniques.
+The system is designed to handle **noisy OCR outputs**, **handwritten prescriptions**, and **ambiguous medical notation** by combining:
+- Optical Character Recognition (OCR)
+- Large Language Models (LLMs)
+- Semantic similarity search
+- Retrieval-Augmented Generation (RAG)
+- Explainable Artificial Intelligence (XAI)
 
-The primary objective is to extract structured medication information and provide reliable medical explanations grounded in verified drug databases.
+The primary objective is to extract **structured and validated medication information** and provide **reliable medical explanations grounded in verified drug databases**.
+
+To support real-world usage and deployment, a **dedicated REST API** has been developed and integrated via the **`ordonnance_api` branch**, enabling seamless interaction with the prescription analysis pipeline.
 
 ---
 
 ## Key Features
-- Medical prescription analysis from **images or text**
+- Medical prescription analysis from **images or raw text**
 - Robust handling of **handwritten and noisy prescriptions**
 - Structured extraction of:
   - Drug name
@@ -18,10 +25,11 @@ The primary objective is to extract structured medication information and provid
   - Frequency
   - Treatment duration
 - Context-aware correction of OCR and extraction errors
-- Secure medication matching using verified drug databases
+- Secure medication matching using **verified drug databases**
 - Safe, patient-oriented medical chatbot
-- Explainable AI integration for transparency and trust
-- LLM-as-a-Judge evaluation for answer validation
+- Explainable AI mechanisms for transparency and trust
+- **LLM-as-a-Judge** framework for answer validation
+- **REST API for integration and deployment** (`ordonnance_api` branch)
 
 ---
 
@@ -37,7 +45,7 @@ The primary objective is to extract structured medication information and provid
   - Dosage
   - Frequency
   - Duration
-- Reliable, medically grounded answers about:
+- Medically grounded answers related to:
   - Usage
   - Precautions
   - Side effects
@@ -45,27 +53,26 @@ The primary objective is to extract structured medication information and provid
 
 ---
 
-## System Architecture & Pipeline
-
-The system follows a multi-stage pipeline designed for robustness, safety, and explainability:
+## System Architecture & Processing Pipeline
+The system follows a **multi-stage pipeline** designed to ensure robustness, medical safety, and explainability.
 
 ### Step 1 – OCR Text Extraction
 - OCR engines evaluated: **Tesseract, EasyOCR, TrOCR, PaddleOCR**
-- **PaddleOCR** selected for best performance on noisy and mixed-content prescriptions
-- OCR output is treated as **noisy and uncertain**
+- **PaddleOCR** selected for its superior performance on noisy layouts and mixed handwritten/printed content
+- OCR output is treated as **inherently noisy and uncertain**
 
 ### Step 2 – Drug Extraction using Large Language Models
-- OCR text processed using an LLM accessed via **Esprit TokenFactory API**
+- OCR text processed using an LLM accessed via the **Esprit TokenFactory API**
 - Model used: **LLaMA-3.1-70B-Instruct**
-- Extracted entities:
+- Extracted information:
   - Drug names
   - Dosage
   - Posology
-  - Duration
-- LLM-based approach chosen over classical NER due to:
-  - Handwritten text
-  - Multilingual prescriptions
-  - Limited open-source medical NER models
+  - Treatment duration
+- LLM-based extraction preferred over classical NER due to:
+  - Handwritten prescriptions
+  - Multilingual content
+  - Limited availability of open-source medical NER models
 
 ### Step 3 – Context-Aware Drug Name Correction
 - Secondary LLM module corrects drug names using:
@@ -75,49 +82,63 @@ The system follows a multi-stage pipeline designed for robustness, safety, and e
 
 ### Step 4 – Drug Matching using FAISS Embeddings
 - Drug names embedded using **SentenceTransformer**
-- Semantic matching performed with **FAISS**
+- Semantic similarity matching performed with **FAISS**
 - Reference database: **CIS_bdpm dataset**
-  - Maintained by ANSM, HAS, and UNCAM
-- Dataset cleaned and normalized for robust matching
+  - Maintained by **ANSM, HAS, and UNCAM**
+- Dataset cleaned and normalized to enable robust matching
 
 ### Step 5 – Final Drug List Construction
-- Validated medications consolidated into a structured, trusted drug list
+- Validated medications consolidated into a **trusted and structured drug list**
 
 ### Step 6 – Retrieval-Augmented Generation (RAG)
-- Medical answers generated exclusively from validated drug records
-- Reduces hallucinations and improves medical safety
+- Medical answers generated **exclusively from validated drug records**
+- Significantly reduces hallucinations and improves medical safety
 
 ### Step 7 – Medical Chat and Patient Guidance
-- Patient-oriented explanations:
+- Patient-oriented explanations covering:
   - Medication usage
   - Precautions
   - Side effects
   - Contraindications
-- System encourages medical consultation when necessary
+- The system explicitly encourages medical consultation when required
+
+---
+
+## API Integration (Branch: `ordonnance_api`)
+A RESTful API has been developed to expose the prescription analysis and medication question-answering capabilities of the system.
+
+The API enables:
+- Integration with web or mobile applications
+- Programmatic submission of prescription images or text
+- Retrieval of structured medication data
+- Interaction with the medical question-answering module
+
+The API implementation, routing, and service orchestration are available in the **`ordonnance_api` branch**, allowing **independent deployment** without impacting the research-oriented codebase.
 
 ---
 
 ## Explainable AI (XAI)
-A **Hybrid Post-hoc Explainable AI** strategy is integrated:
-- Declarative explanations (why a drug was identified)
-- Counterfactual explanations (what would change the outcome)
-- Enhances transparency, reliability, and trustworthiness
+A **Hybrid Post-hoc Explainable AI** strategy is integrated, combining:
+- **Declarative explanations** (why a drug was identified)
+- **Counterfactual explanations** (what would change the outcome)
+
+This approach enhances **transparency, reliability, and medical trustworthiness**.
 
 ---
 
 ## Evaluation Strategy
-- **LLM-as-a-Judge** framework used to assess:
-  - Medical correctness
-  - Safety
-  - Clarity
-  - Grounding in verified data
+The system is evaluated using an **LLM-as-a-Judge** framework to assess:
+- Medical correctness
+- Safety
+- Clarity
+- Grounding in verified data
 
 ---
 
 ## Disclaimer
-This system is designed as a **medical decision-support tool**.
-It does **not replace professional medical advice**.
-Users are always encouraged to consult healthcare professionals.
+This system is designed as a **medical decision-support tool**.  
+It does **not replace professional medical advice**, diagnosis, or treatment.  
+Users are always encouraged to consult qualified healthcare professionals.
 
 ---
 
@@ -130,6 +151,6 @@ Users are always encouraged to consult healthcare professionals.
 - Explainable AI (XAI)
 
 ---
-
+## License This project is intended for academic and research purposes.
 ## License
-This project is intended for academic and research purposes.
+This project is intended for **academic and research purposes**.
